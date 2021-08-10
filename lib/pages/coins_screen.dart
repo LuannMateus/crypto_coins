@@ -1,25 +1,59 @@
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:crypto_coin/repositories/coin_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class CoinsScreen extends StatelessWidget {
-  const CoinsScreen({Key? key}) : super(key: key);
+class CoinsScreen extends StatefulWidget {
+  CoinsScreen({Key? key}) : super(key: key);
+
+  @override
+  _CoinsScreenState createState() => _CoinsScreenState();
+}
+
+class _CoinsScreenState extends State<CoinsScreen> {
+  final List<Coin> table = CoinRepository.table;
+
+  NumberFormat currencyFormat =
+      NumberFormat.currency(locale: 'eua', name: '\$');
+
+  List<Coin> selecteds = [];
 
   @override
   Widget build(BuildContext context) {
-    final List<Coin> table = CoinRepository.table;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Crypto Coins'),
         centerTitle: true,
       ),
       body: ListView.separated(
+        padding: const EdgeInsets.all(15),
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
-            leading: Image.asset(table[index].icon),
-            title: Text(table[index].name),
-            trailing: Text(table[index].price.toString()),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            leading: selecteds.contains(table[index])
+                ? CircleAvatar(child: Icon(Icons.check))
+                : SizedBox(
+                    child: Image.asset(table[index].icon),
+                    width: 40,
+                  ),
+            title: Text(
+              table[index].name,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            trailing: Text(currencyFormat.format(table[index].price)),
+            selected: selecteds.contains(table[index]),
+            selectedTileColor: Colors.white10,
+            onLongPress: () {
+              setState(() {
+                selecteds.contains(table[index])
+                    ? selecteds.remove(table[index])
+                    : selecteds.add(table[index]);
+              });
+            },
           );
         },
         separatorBuilder: (_, __) => Divider(),
