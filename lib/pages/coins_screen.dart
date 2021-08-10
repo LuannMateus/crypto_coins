@@ -18,13 +18,44 @@ class _CoinsScreenState extends State<CoinsScreen> {
 
   List<Coin> selecteds = [];
 
+  AppBar dynamicAppBar() {
+    if (selecteds.isEmpty) {
+      return AppBar(
+        title: Text('Crypto Coins'),
+        centerTitle: true,
+      );
+    } else {
+      return AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            setState(() {
+              selecteds = [];
+            });
+          },
+        ),
+        title: Text('${selecteds.length} selecteds'),
+        centerTitle: true,
+        backgroundColor: Colors.white70,
+        elevation: 1,
+        iconTheme: IconThemeData(
+          color: Colors.black87,
+        ),
+        textTheme: TextTheme(
+          headline6: TextStyle(
+            color: Colors.black87,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Crypto Coins'),
-        centerTitle: true,
-      ),
+      appBar: dynamicAppBar(),
       body: ListView.separated(
         padding: const EdgeInsets.all(15),
         itemBuilder: (BuildContext context, int index) {
@@ -59,6 +90,20 @@ class _CoinsScreenState extends State<CoinsScreen> {
         separatorBuilder: (_, __) => Divider(),
         itemCount: table.length,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: selecteds.isNotEmpty
+          ? FloatingActionButton.extended(
+              onPressed: () {},
+              icon: Icon(Icons.star),
+              label: Text(
+                'FAVORITE',
+                style: TextStyle(
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          : null,
     );
   }
 }
