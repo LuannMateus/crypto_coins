@@ -1,8 +1,10 @@
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:crypto_coin/pages/coins_details_screen.dart';
 import 'package:crypto_coin/repositories/coin_repository.dart';
+import 'package:crypto_coin/repositories/favorites_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CoinsScreen extends StatefulWidget {
   CoinsScreen({Key? key}) : super(key: key);
@@ -62,8 +64,16 @@ class _CoinsScreenState extends State<CoinsScreen> {
     );
   }
 
+  void cleanAllSelecteds() {
+    setState(() {
+      selecteds = [];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final favorites = Provider.of<FavoritesRepository>(context);
+
     return Scaffold(
       appBar: dynamicAppBar(),
       body: ListView.separated(
@@ -78,12 +88,22 @@ class _CoinsScreenState extends State<CoinsScreen> {
                     child: Image.asset(table[index].icon),
                     width: 40,
                   ),
-            title: Text(
-              table[index].name,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-              ),
+            title: Row(
+              children: <Widget>[
+                Text(
+                  table[index].name,
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (favorites.list.contains(table[index]))
+                  Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 12,
+                  ),
+              ],
             ),
             trailing: Text(currencyFormat.format(table[index].price)),
             selected: selecteds.contains(table[index]),
@@ -104,7 +124,10 @@ class _CoinsScreenState extends State<CoinsScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: selecteds.isNotEmpty
           ? FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () {
+                favorites.saveAll(selecteds);
+                cleanAllSelecteds();
+              },
               icon: Icon(Icons.star),
               label: Text(
                 'FAVORITE',
