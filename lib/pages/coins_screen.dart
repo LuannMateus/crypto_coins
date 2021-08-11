@@ -2,6 +2,7 @@ import 'package:crypto_coin/models/Coin.dart';
 import 'package:crypto_coin/pages/coins_details_screen.dart';
 import 'package:crypto_coin/repositories/coin_repository.dart';
 import 'package:crypto_coin/repositories/favorites_repository.dart';
+import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +16,6 @@ class CoinsScreen extends StatefulWidget {
 
 class _CoinsScreenState extends State<CoinsScreen> {
   final List<Coin> table = CoinRepository.table;
-
-  NumberFormat currencyFormat =
-      NumberFormat.currency(locale: 'pt-BR', name: 'R\$');
 
   List<Coin> selecteds = [];
 
@@ -105,7 +103,7 @@ class _CoinsScreenState extends State<CoinsScreen> {
                   ),
               ],
             ),
-            trailing: Text(currencyFormat.format(table[index].price)),
+            trailing: Text(PriceFormat.format(table[index].price)),
             selected: selecteds.contains(table[index]),
             selectedTileColor: Colors.white10,
             onLongPress: () {

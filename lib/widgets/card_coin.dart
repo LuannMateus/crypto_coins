@@ -1,6 +1,7 @@
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:crypto_coin/pages/coins_details_screen.dart';
 import 'package:crypto_coin/repositories/favorites_repository.dart';
+import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +16,6 @@ class CardCoin extends StatefulWidget {
 }
 
 class _CardCoinState extends State<CardCoin> {
-  NumberFormat currencyFormat =
-      NumberFormat.currency(locale: 'pt-BR', name: 'R\$');
-
   static Map<String, Color> priceColor = <String, Color>{
     'up': Colors.teal,
     'down': Colors.white70,
@@ -83,7 +81,7 @@ class _CardCoinState extends State<CardCoin> {
                     ),
                     borderRadius: BorderRadius.circular(100)),
                 child: Text(
-                  currencyFormat.format(widget.coin.price),
+                  PriceFormat.format(widget.coin.price),
                   style: TextStyle(
                     fontSize: 16,
                     color: priceColor['down'],

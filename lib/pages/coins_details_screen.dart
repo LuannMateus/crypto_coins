@@ -1,3 +1,4 @@
+import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:flutter/services.dart';
@@ -13,9 +14,6 @@ class CoinsDetailsScreen extends StatefulWidget {
 }
 
 class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
-  NumberFormat currencyFormat =
-      NumberFormat.currency(locale: 'pt-BR', name: 'R\$');
-
   final _form = GlobalKey<FormState>();
   final _value = TextEditingController();
   double quantity = 0;
@@ -61,7 +59,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
                     width: 10,
                   ),
                   Text(
-                    currencyFormat.format(widget.coin.price),
+                    PriceFormat.format(widget.coin.price),
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w600,
