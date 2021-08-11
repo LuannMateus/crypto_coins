@@ -1,5 +1,6 @@
-import 'package:crypto_coin/pages/coins_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'package:crypto_coin/pages/home_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
       ),
-      home: CoinsScreen(),
+      home: HomeScreen(),
     );
   }
 }
