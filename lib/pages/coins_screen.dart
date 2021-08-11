@@ -1,10 +1,10 @@
+import 'package:crypto_coin/configs/app_settings.dart';
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:crypto_coin/pages/coins_details_screen.dart';
 import 'package:crypto_coin/repositories/coin_repository.dart';
 import 'package:crypto_coin/repositories/favorites_repository.dart';
 import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CoinsScreen extends StatefulWidget {
@@ -16,14 +16,44 @@ class CoinsScreen extends StatefulWidget {
 
 class _CoinsScreenState extends State<CoinsScreen> {
   final List<Coin> table = CoinRepository.table;
-
   List<Coin> selecteds = [];
+
+  late Map<String, String> loc;
+  late PriceFormat priceFormat;
+
+  readNumberFormat() {
+    loc = context.watch<AppSettings>().locale;
+    priceFormat =
+        PriceFormat(locale: loc['locale'] ?? '', name: loc['name'] ?? '');
+  }
+
+  Widget changeLanguageButton() {
+    final locale = loc['locale'] == 'pt_BR' ? 'en_US' : 'pt_BR';
+    final name = loc['locale'] == 'pt_BR' ? '\$' : 'R\$';
+
+    return PopupMenuButton(
+      icon: Icon(Icons.language),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: ListTile(
+            leading: Icon(Icons.swap_vert),
+            title: Text('Use $locale'),
+            onTap: () {
+              context.read<AppSettings>().setLocale(locale, name);
+              Navigator.pop(context);
+            },
+          ),
+        )
+      ],
+    );
+  }
 
   AppBar dynamicAppBar() {
     if (selecteds.isEmpty) {
       return AppBar(
         title: Text('Crypto Coins'),
         centerTitle: true,
+        actions: [changeLanguageButton()],
       );
     } else {
       return AppBar(
@@ -72,6 +102,8 @@ class _CoinsScreenState extends State<CoinsScreen> {
   Widget build(BuildContext context) {
     final favorites = Provider.of<FavoritesRepository>(context);
 
+    readNumberFormat();
+
     return Scaffold(
       appBar: dynamicAppBar(),
       body: ListView.separated(
@@ -103,7 +135,7 @@ class _CoinsScreenState extends State<CoinsScreen> {
                   ),
               ],
             ),
-            trailing: Text(PriceFormat.format(table[index].price)),
+            trailing: Text(priceFormat.format(table[index].price)),
             selected: selecteds.contains(table[index]),
             selectedTileColor: Colors.white10,
             onLongPress: () {

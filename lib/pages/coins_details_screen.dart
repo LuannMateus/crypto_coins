@@ -1,8 +1,9 @@
+import 'package:crypto_coin/configs/app_settings.dart';
 import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CoinsDetailsScreen extends StatefulWidget {
   final Coin coin;
@@ -17,6 +18,15 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
   final _form = GlobalKey<FormState>();
   final _value = TextEditingController();
   double quantity = 0;
+
+  late Map<String, String> loc;
+  late PriceFormat priceFormat;
+
+  readNumberFormat() {
+    loc = Provider.of<AppSettings>(context).locale;
+    priceFormat =
+        PriceFormat(locale: loc['locale'] ?? '', name: loc['name'] ?? '');
+  }
 
   void handlePurchase() {
     if (!_form.currentState!.validate()) {
@@ -36,6 +46,8 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    readNumberFormat();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.coin.name),
@@ -59,7 +71,7 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
                     width: 10,
                   ),
                   Text(
-                    PriceFormat.format(widget.coin.price),
+                    priceFormat.format(widget.coin.price),
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w600,

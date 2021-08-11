@@ -1,9 +1,9 @@
+import 'package:crypto_coin/configs/app_settings.dart';
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:crypto_coin/pages/coins_details_screen.dart';
 import 'package:crypto_coin/repositories/favorites_repository.dart';
 import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CardCoin extends StatefulWidget {
@@ -16,6 +16,15 @@ class CardCoin extends StatefulWidget {
 }
 
 class _CardCoinState extends State<CardCoin> {
+  late Map<String, String> loc;
+  late PriceFormat priceFormat;
+
+  readNumberFormat() {
+    loc = context.watch<AppSettings>().locale;
+    priceFormat =
+        PriceFormat(locale: loc['locale'] ?? '', name: loc['name'] ?? '');
+  }
+
   static Map<String, Color> priceColor = <String, Color>{
     'up': Colors.teal,
     'down': Colors.white70,
@@ -33,6 +42,7 @@ class _CardCoinState extends State<CardCoin> {
   @override
   Widget build(BuildContext context) {
     final favorites = Provider.of<FavoritesRepository>(context, listen: false);
+    readNumberFormat();
 
     return Card(
       margin: const EdgeInsets.only(top: 12),
@@ -81,7 +91,7 @@ class _CardCoinState extends State<CardCoin> {
                     ),
                     borderRadius: BorderRadius.circular(100)),
                 child: Text(
-                  PriceFormat.format(widget.coin.price),
+                  priceFormat.format(widget.coin.price),
                   style: TextStyle(
                     fontSize: 16,
                     color: priceColor['down'],
