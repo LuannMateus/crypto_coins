@@ -1,4 +1,5 @@
 import 'package:crypto_coin/models/Coin.dart';
+import 'package:crypto_coin/pages/coins_details_screen.dart';
 import 'package:crypto_coin/repositories/coin_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -52,6 +53,15 @@ class _CoinsScreenState extends State<CoinsScreen> {
     }
   }
 
+  void showCoinDetails(Coin coin) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CoinsDetailsScreen(coin: coin),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,6 +95,7 @@ class _CoinsScreenState extends State<CoinsScreen> {
                     : selecteds.add(table[index]);
               });
             },
+            onTap: () => showCoinDetails(table[index]),
           );
         },
         separatorBuilder: (_, __) => Divider(),
