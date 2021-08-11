@@ -1,10 +1,15 @@
 import 'package:intl/intl.dart';
 
-abstract class PriceFormat {
-  static NumberFormat _currencyFormat =
-      NumberFormat.currency(locale: 'pt-BR', name: 'R\$');
+class PriceFormat {
+  String locale;
+  String name;
 
-  static String format(double price) {
+  PriceFormat({required this.locale, required this.name});
+
+  String format(double price) {
+    NumberFormat _currencyFormat =
+        NumberFormat.currency(locale: locale, name: name);
+
     return _currencyFormat.format(price);
   }
 }
