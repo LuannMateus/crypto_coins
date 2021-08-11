@@ -15,7 +15,7 @@ class _CoinsScreenState extends State<CoinsScreen> {
   final List<Coin> table = CoinRepository.table;
 
   NumberFormat currencyFormat =
-      NumberFormat.currency(locale: 'eua', name: '\$');
+      NumberFormat.currency(locale: 'pt-BR', name: 'R\$');
 
   List<Coin> selecteds = [];
 
