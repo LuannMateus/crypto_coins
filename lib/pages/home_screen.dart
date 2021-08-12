@@ -1,4 +1,5 @@
 import 'package:crypto_coin/pages/coins_screen.dart';
+import 'package:crypto_coin/pages/configurations_screen.dart';
 import 'package:crypto_coin/pages/favorites_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CoinsScreen(),
           FavoritesScreen(),
+          ConfigurationsScreen(),
         ],
         onPageChanged: setActualPage,
       ),
@@ -42,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'All'),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Favorites'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Configurations'),
         ],
         onTap: (page) {
           pageController.animateToPage(
