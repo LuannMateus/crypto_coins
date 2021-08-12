@@ -1,5 +1,6 @@
 import 'package:crypto_coin/configs/app_settings.dart';
 import 'package:crypto_coin/configs/hive_config.dart';
+import 'package:crypto_coin/repositories/account_repository.dart';
 import 'package:crypto_coin/repositories/favorites_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => FavoritesRepository(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AccountRepository(),
         ),
       ],
       child: MyApp(),
