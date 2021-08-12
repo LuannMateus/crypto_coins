@@ -1,6 +1,7 @@
 import 'package:crypto_coin/pages/coins_screen.dart';
 import 'package:crypto_coin/pages/configurations_screen.dart';
 import 'package:crypto_coin/pages/favorites_screen.dart';
+import 'package:crypto_coin/pages/wallet_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,15 +36,19 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CoinsScreen(),
           FavoritesScreen(),
+          WalletScreen(),
           ConfigurationsScreen(),
         ],
         onPageChanged: setActualPage,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: actualPage,
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'All'),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Favorites'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance_wallet), label: 'Wallet'),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings), label: 'Configurations'),
         ],
