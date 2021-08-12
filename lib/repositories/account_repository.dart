@@ -1,5 +1,6 @@
 import 'package:crypto_coin/database/db.dart';
 import 'package:crypto_coin/models/Coin.dart';
+import 'package:crypto_coin/models/History.dart';
 import 'package:crypto_coin/models/Position.dart';
 import 'package:crypto_coin/repositories/coin_repository.dart';
 import 'package:flutter/widgets.dart';
@@ -9,11 +10,14 @@ class AccountRepository extends ChangeNotifier {
   late Database db;
 
   List<Position> _wallet = [];
+  List<History> _history = [];
+
   double _amount = 0;
 
   get amount => _amount;
 
   List<Position> get wallet => _wallet;
+  List<History> get history => _history;
 
   AccountRepository() {
     _initRepository();
@@ -22,6 +26,7 @@ class AccountRepository extends ChangeNotifier {
   Future<void> _initRepository() async {
     await _getAmount();
     await _getWallet();
+    await _getHistory();
   }
 
   Future<void> _getAmount() async {
@@ -108,6 +113,33 @@ class AccountRepository extends ChangeNotifier {
           coin: coin,
           quantity: double.parse(
             position['quantity'],
+          ),
+        ),
+      );
+    });
+
+    notifyListeners();
+  }
+
+  Future<void> _getHistory() async {
+    _history = [];
+
+    List operations = await db.query('history');
+
+    operations.forEach((operation) {
+      Coin coin = CoinRepository.table.firstWhere(
+        (coin) => coin.initials == operation['initials'],
+      );
+
+      _history.add(
+        History(
+          operationDate:
+              DateTime.fromMillisecondsSinceEpoch(operation['operation_date']),
+          operationType: operation['operation_type'],
+          coin: coin,
+          value: operation['value'],
+          quantity: double.parse(
+            operation['quantity'],
           ),
         ),
       );

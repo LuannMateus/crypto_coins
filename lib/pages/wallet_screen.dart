@@ -4,6 +4,7 @@ import 'package:crypto_coin/repositories/account_repository.dart';
 import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -145,6 +146,32 @@ class _WalletScreenState extends State<WalletScreen> {
     });
   }
 
+  Widget loadHistory() {
+    final history = account.history;
+
+    final date = DateFormat('dd/MM/yyyy - hh:mm');
+    List<Widget> widgets = [];
+
+    for (var operation in history) {
+      widgets.add(
+        ListTile(
+          title: Text(operation.coin.name),
+          subtitle: Text(date.format(operation.operationDate)),
+          trailing: Text(
+            priceFormat.format(
+              (operation.coin.price * operation.quantity),
+            ),
+          ),
+        ),
+      );
+      widgets.add(Divider());
+    }
+
+    return Column(
+      children: widgets,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     readNumberFormat();
@@ -178,6 +205,7 @@ class _WalletScreenState extends State<WalletScreen> {
               ),
             ),
             loadGraphic(),
+            loadHistory(),
           ],
         ),
       ),
