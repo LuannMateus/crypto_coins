@@ -28,18 +28,18 @@ class DB {
     await db.execute(_wallet);
     await db.execute(_history);
 
-    await db.insert('count', {'amount': 0});
+    await db.insert('account', {'amount': 0});
   }
 
   String get _account => ''' 
-    CREATE TABLE account (
+    CREATE TABLE IF NOT EXISTS account (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       amount REAL
     );
   ''';
 
   String get _wallet => ''' 
-    CREATE TABLE wallet (
+    CREATE TABLE IF NOT EXISTS wallet (
       initials TEXT PRIMARY KEY,
       coin TEXT,
       quantity TEXT
@@ -47,7 +47,7 @@ class DB {
   ''';
 
   String get _history => ''' 
-    CREATE TABLE wallet (
+    CREATE TABLE IF NOT EXISTS history (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       operation_date INT,
       operation_type TEXT,
