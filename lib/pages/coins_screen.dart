@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:crypto_coin/configs/app_settings.dart';
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:crypto_coin/pages/coins_details_screen.dart';
 import 'package:crypto_coin/repositories/coin_repository.dart';
 import 'package:crypto_coin/repositories/favorites_repository.dart';
 import 'package:crypto_coin/utils/priceFormat.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CoinsScreen extends StatefulWidget {
   CoinsScreen({Key? key}) : super(key: key);
@@ -127,7 +128,8 @@ class _CoinsScreenState extends State<CoinsScreen> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (favorites.list.contains(table[index]))
+                if (favorites.list
+                    .any((fav) => fav.initials == table[index].initials))
                   Icon(
                     Icons.star,
                     color: Colors.amber,
