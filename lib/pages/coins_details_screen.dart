@@ -1,4 +1,5 @@
 import 'package:crypto_coin/configs/app_settings.dart';
+import 'package:crypto_coin/repositories/account_repository.dart';
 import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_coin/models/Coin.dart';
@@ -28,12 +29,15 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
         PriceFormat(locale: loc['locale'] ?? '', name: loc['name'] ?? '');
   }
 
-  void handlePurchase() {
+  late AccountRepository account;
+
+  Future<void> handlePurchase() async {
     if (!_form.currentState!.validate()) {
       return;
     }
 
     // Save in the database
+    await account.purchase(widget.coin, double.parse(_value.text));
 
     Navigator.pop(context);
 
@@ -46,6 +50,8 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    account = Provider.of<AccountRepository>(context);
+
     readNumberFormat();
 
     return Scaffold(
@@ -129,6 +135,8 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
                     return 'Enter the purchase amount';
                   } else if (double.parse(value) < 50) {
                     return 'The minimium value accepted is R\$ 50,00';
+                  } else if (double.parse(value) > account.amount) {
+                    return 'You cannot buy coins. Money is not enough';
                   }
 
                   return null;

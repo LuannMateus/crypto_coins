@@ -25,14 +25,13 @@ class _WalletScreenState extends State<WalletScreen> {
 
   late Map<String, String> loc;
   late PriceFormat priceFormat;
-
   readNumberFormat() {
     loc = Provider.of<AppSettings>(context).locale;
     priceFormat =
         PriceFormat(locale: loc['locale'] ?? '', name: loc['name'] ?? '');
   }
 
-  setGraphicData(int index) {
+  setGraphicData(index) {
     if (index < 0) return;
 
     if (index == wallet.length) {
@@ -51,9 +50,10 @@ class _WalletScreenState extends State<WalletScreen> {
 
     final sizeList = wallet.length + 1;
 
-    return List.generate(sizeList, (index) {
-      final isTouched = index == index;
-      final isAmount = index == sizeList - 1;
+    return List.generate(sizeList, (i) {
+      final isTouched = i == index;
+      final isAmount = i == sizeList - 1;
+
       final fontSize = isTouched ? 18.0 : 14.0;
       final radius = isTouched ? 60.0 : 50.0;
       final color = isTouched ? Colors.tealAccent : Colors.tealAccent[400];
@@ -61,8 +61,7 @@ class _WalletScreenState extends State<WalletScreen> {
       double percentage = 0;
 
       if (!isAmount) {
-        percentage =
-            wallet[index].coin.price * wallet[index].quantity / walletAmount;
+        percentage = wallet[i].coin.price * wallet[i].quantity / walletAmount;
       } else {
         percentage = (account.amount > 0) ? account.amount / walletAmount : 0;
       }
@@ -99,8 +98,8 @@ class _WalletScreenState extends State<WalletScreen> {
                 aspectRatio: 1,
                 child: PieChart(
                   PieChartData(
-                    sectionsSpace: 5,
-                    centerSpaceRadius: 110,
+                    sectionsSpace: 2,
+                    centerSpaceRadius: 130,
                     sections: loadWallet(),
                     pieTouchData: PieTouchData(
                       touchCallback: (touch) => setState(() {
