@@ -1,5 +1,6 @@
 import 'package:crypto_coin/configs/app_settings.dart';
 import 'package:crypto_coin/repositories/account_repository.dart';
+import 'package:crypto_coin/services/auth_service.dart';
 import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,6 +94,28 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                 icon: Icon(Icons.edit),
               ),
             ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: OutlinedButton(
+                onPressed: () => context.read<AuthService>().logout(),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.red,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
