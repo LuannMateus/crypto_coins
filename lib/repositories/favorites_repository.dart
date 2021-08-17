@@ -1,13 +1,11 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto_coin/adapters/CoinHiveAdapter.dart';
 import 'package:crypto_coin/database/db_firestore.dart';
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:crypto_coin/repositories/coin_repository.dart';
 import 'package:crypto_coin/services/auth_service.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hive_flutter/adapters.dart';
 
 class FavoritesRepository extends ChangeNotifier {
   List<Coin> _list = [];
