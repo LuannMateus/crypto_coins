@@ -23,7 +23,8 @@ void main() async {
           create: (context) => AppSettings(),
         ),
         ChangeNotifierProvider(
-          create: (context) => FavoritesRepository(),
+          create: (context) =>
+              FavoritesRepository(auth: context.read<AuthService>()),
         ),
         ChangeNotifierProvider(
           create: (context) => AccountRepository(),
