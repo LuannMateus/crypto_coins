@@ -25,6 +25,29 @@ class CoinRepository extends ChangeNotifier {
         Timer.periodic(Duration(minutes: 5), (timer) => checkAndUpdatePrices());
   }
 
+  getHistoryCoin(Coin coin) async {
+    final response = await http.get(
+      Uri.parse(
+          'https://api.coinbase.com/v2/assets/prices/${coin.baseId}?base=BRL'),
+    );
+
+    List<Map<String, dynamic>> prices = [];
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      final Map<String, dynamic> coin = json['data']['prices'];
+
+      prices.add(coin['hour']);
+      prices.add(coin['day']);
+      prices.add(coin['week']);
+      prices.add(coin['month']);
+      prices.add(coin['year']);
+      prices.add(coin['all']);
+    }
+
+    return prices;
+  }
+
   Future<void> checkAndUpdatePrices() async {
     String uri = 'https://api.coinbase.com/v2/assets/prices?base=BRL';
 
@@ -90,8 +113,6 @@ class CoinRepository extends ChangeNotifier {
         totalPeriodChange: double.parse(row['totalPeriodChange']),
       );
     }).toList();
-
-    print('UPDATEEEE');
 
     notifyListeners();
   }
