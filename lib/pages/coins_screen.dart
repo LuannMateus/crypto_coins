@@ -16,11 +16,14 @@ class CoinsScreen extends StatefulWidget {
 }
 
 class _CoinsScreenState extends State<CoinsScreen> {
-  final List<Coin> table = CoinRepository.table;
+  late List<dynamic> table;
   List<Coin> selecteds = [];
 
   late Map<String, String> loc;
   late PriceFormat priceFormat;
+
+  late FavoritesRepository favorites;
+  late CoinRepository coins;
 
   readNumberFormat() {
     loc = context.watch<AppSettings>().locale;
@@ -101,57 +104,63 @@ class _CoinsScreenState extends State<CoinsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final favorites = Provider.of<FavoritesRepository>(context);
+    favorites = context.watch<FavoritesRepository>();
+    coins = context.watch<CoinRepository>();
+
+    table = coins.table;
 
     readNumberFormat();
 
     return Scaffold(
       appBar: dynamicAppBar(),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(15),
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            leading: selecteds.contains(table[index])
-                ? CircleAvatar(child: Icon(Icons.check))
-                : SizedBox(
-                    child: Image.asset(table[index].icon),
-                    width: 40,
+      body: RefreshIndicator(
+        onRefresh: () => coins.checkAndUpdatePrices(),
+        child: ListView.separated(
+          padding: const EdgeInsets.all(15),
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              leading: selecteds.contains(table[index])
+                  ? CircleAvatar(child: Icon(Icons.check))
+                  : SizedBox(
+                      child: Image.network(table[index].icon),
+                      width: 40,
+                    ),
+              title: Row(
+                children: <Widget>[
+                  Text(
+                    table[index].name,
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-            title: Row(
-              children: <Widget>[
-                Text(
-                  table[index].name,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                if (favorites.list
-                    .any((fav) => fav.initials == table[index].initials))
-                  Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 12,
-                  ),
-              ],
-            ),
-            trailing: Text(priceFormat.format(table[index].price)),
-            selected: selecteds.contains(table[index]),
-            selectedTileColor: Colors.white10,
-            onLongPress: () {
-              setState(() {
-                selecteds.contains(table[index])
-                    ? selecteds.remove(table[index])
-                    : selecteds.add(table[index]);
-              });
-            },
-            onTap: () => showCoinDetails(table[index]),
-          );
-        },
-        separatorBuilder: (_, __) => Divider(),
-        itemCount: table.length,
+                  if (favorites.list
+                      .any((fav) => fav.initials == table[index].initials))
+                    Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                      size: 12,
+                    ),
+                ],
+              ),
+              trailing: Text(priceFormat.format(table[index].price)),
+              selected: selecteds.contains(table[index]),
+              selectedTileColor: Colors.white10,
+              onLongPress: () {
+                setState(() {
+                  selecteds.contains(table[index])
+                      ? selecteds.remove(table[index])
+                      : selecteds.add(table[index]);
+                });
+              },
+              onTap: () => showCoinDetails(table[index]),
+            );
+          },
+          separatorBuilder: (_, __) => Divider(),
+          itemCount: table.length,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: selecteds.isNotEmpty

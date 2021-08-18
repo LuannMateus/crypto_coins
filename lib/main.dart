@@ -1,6 +1,7 @@
 import 'package:crypto_coin/configs/app_settings.dart';
 import 'package:crypto_coin/configs/hive_config.dart';
 import 'package:crypto_coin/repositories/account_repository.dart';
+import 'package:crypto_coin/repositories/coin_repository.dart';
 import 'package:crypto_coin/repositories/favorites_repository.dart';
 import 'package:crypto_coin/services/auth_service.dart';
 import 'package:crypto_coin/widgets/auth_check.dart';
@@ -23,11 +24,17 @@ void main() async {
           create: (context) => AppSettings(),
         ),
         ChangeNotifierProvider(
-          create: (context) =>
-              FavoritesRepository(auth: context.read<AuthService>()),
+          create: (context) => CoinRepository(),
         ),
         ChangeNotifierProvider(
-          create: (context) => AccountRepository(),
+          create: (context) => FavoritesRepository(
+            auth: context.read<AuthService>(),
+            coins: context.read<CoinRepository>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              AccountRepository(coins: context.read<CoinRepository>()),
         ),
       ],
       child: MyApp(),

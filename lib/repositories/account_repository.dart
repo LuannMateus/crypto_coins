@@ -14,12 +14,14 @@ class AccountRepository extends ChangeNotifier {
 
   double _amount = 0;
 
+  CoinRepository coins;
+
   get amount => _amount;
 
   List<Position> get wallet => _wallet;
   List<History> get history => _history;
 
-  AccountRepository() {
+  AccountRepository({required this.coins}) {
     _initRepository();
   }
 
@@ -104,7 +106,7 @@ class AccountRepository extends ChangeNotifier {
     List positions = await db.query('wallet');
 
     positions.forEach((position) {
-      Coin coin = CoinRepository.table.firstWhere(
+      Coin coin = coins.table.firstWhere(
         (coin) => coin.initials == position['initials'],
       );
 
@@ -127,7 +129,7 @@ class AccountRepository extends ChangeNotifier {
     List operations = await db.query('history');
 
     operations.forEach((operation) {
-      Coin coin = CoinRepository.table.firstWhere(
+      Coin coin = coins.table.firstWhere(
         (coin) => coin.initials == operation['initials'],
       );
 

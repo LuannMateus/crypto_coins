@@ -11,8 +11,9 @@ class FavoritesRepository extends ChangeNotifier {
   List<Coin> _list = [];
   late FirebaseFirestore db;
   late AuthService auth;
+  CoinRepository coins;
 
-  FavoritesRepository({required this.auth}) {
+  FavoritesRepository({required this.auth, required this.coins}) {
     _startRepository();
   }
 
@@ -31,7 +32,7 @@ class FavoritesRepository extends ChangeNotifier {
           await db.collection('users/${auth.user!.uid}/favorites').get();
 
       snapshot.docs.forEach((doc) {
-        Coin coin = CoinRepository.table
+        Coin coin = coins.table
             .firstWhere((coin) => coin.initials == doc.get('initials'));
         _list.add(coin);
 
