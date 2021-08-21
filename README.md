@@ -21,8 +21,9 @@ O projeto consiste em passo a passo construir um aplicativo para listar algumas 
 <section>
 
 <h2>O que foi usado: </h2>
-<hr/>
+
 </br>
+
 <ul>
 <li>Widgets de UI: AppBar, Lists, Images, etc.</li>
 <li>Navegação (Routing) entre telas.</li>
