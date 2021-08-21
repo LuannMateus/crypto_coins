@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:crypto_coin/configs/app_settings.dart';
 import 'package:crypto_coin/pages/documents_screen.dart';
 import 'package:crypto_coin/repositories/account_repository.dart';
@@ -5,6 +8,7 @@ import 'package:crypto_coin/services/auth_service.dart';
 import 'package:crypto_coin/utils/priceFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ConfigurationsScreen extends StatefulWidget {
@@ -17,6 +21,8 @@ class ConfigurationsScreen extends StatefulWidget {
 class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   late Map<String, String> loc;
   late PriceFormat priceFormat;
+
+  XFile? receipt;
 
   readNumberFormat() {
     loc = Provider.of<AppSettings>(context).locale;
@@ -66,6 +72,18 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     showDialog(context: context, builder: (context) => dialog);
   }
 
+  Future<void> selectReceipt() async {
+    final ImagePicker picker = ImagePicker();
+
+    try {
+      XFile? file = await picker.pickImage(source: ImageSource.gallery);
+
+      if (file != null) setState(() => receipt = file);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final account = context.watch<AccountRepository>();
@@ -107,6 +125,14 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                 ),
               ),
             ),
+            ListTile(
+              leading: Icon(Icons.attach_file),
+              title: Text('Send the deposit slip'),
+              onTap: selectReceipt,
+              trailing:
+                  receipt != null ? Image.file(File(receipt!.path)) : null,
+            ),
+            Divider(),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
