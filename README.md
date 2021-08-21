@@ -4,7 +4,7 @@
 
 <section>
 <i>Projeto de exemplo utilizado no Curso de Desenvolvimento de Apps em Flutter do Prof. Dr. Diego Antunes. Para acompanhar as aulas, basta acessar a 
-<a href="https://www.youtube.com/playlist list=PL_wKlpKIC9vWCRIgMvH8pbRmX8XVouRv1">
+<a href="https://www.youtube.com/playlist?list=PL_wKlpKIC9vWCRIgMvH8pbRmX8XVouRv1">
 playlist com os vídeos.
 </a>
 
