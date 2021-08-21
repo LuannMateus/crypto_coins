@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:crypto_coin/models/Coin.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:social_share/social_share.dart';
 
 class CoinsDetailsScreen extends StatefulWidget {
   final Coin coin;
@@ -58,15 +59,29 @@ class _CoinsDetailsScreenState extends State<CoinsDetailsScreen> {
     );
   }
 
+  void sharePrice() {
+    final coin = widget.coin;
+
+    SocialShare.shareOptions(
+      'Check ${coin.name} price now: ${priceFormat.format(coin.price)}',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    account = Provider.of<AccountRepository>(context);
+    account = Provider.of<AccountRepository>(context, listen: false);
 
     readNumberFormat();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.coin.name),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: sharePrice,
+          )
+        ],
         centerTitle: true,
       ),
       body: SingleChildScrollView(
